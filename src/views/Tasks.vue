@@ -117,14 +117,14 @@ onMounted(() => {
 });
 
 
-watch(
-  tasksStore.tasks,
-  () => {
-    tasksStore.saveTasks();
-    tasksStore.fetchTasks();
-  },
-  { deep: true },
-);
+// watch(
+//   tasksStore.tasks,
+//   () => {
+//     // tasksStore.saveTasks();
+//     tasksStore.fetchTasks();
+//   },
+//   { deep: true },
+// );
 
 const sortedTasks = computed(() => {
   return tasksStore.tasks.slice().sort((a, b) => {

@@ -130,12 +130,12 @@ const props = defineProps({
 
 const editedTask = ref(props.task.task);
 
-watch(
-  tasksStore.tasks,
-  () => {
-    tasksStore.saveTasks();
-    tasksStore.fetchTasks();
-  },
-  { deep: true },
-);
+// watch(
+//   tasksStore.tasks,
+//   () => {
+//     // tasksStore.saveTasks();
+//     tasksStore.fetchTasks();
+//   },
+//   { deep: true },
+// );
 </script>
