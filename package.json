@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.1.1",
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
     "intro.js": "^7.2.0",
     "pinia": "^2.1.7",
     "uuid": "^9.0.1",
