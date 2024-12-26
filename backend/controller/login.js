@@ -1,7 +1,7 @@
 import { compare } from "bcrypt";
 
 import { config } from "dotenv";
-import { createSecretToken } from "../tokenGeneration/generateToken";
+import { createSecretToken } from "../tokenGeneration/generateToken.js";
 
 config();
 

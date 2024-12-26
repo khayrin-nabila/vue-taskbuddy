@@ -1,4 +1,4 @@
-import { createSecretToken } from "../tokenGeneration/generateToken";
+import { createSecretToken } from "../tokenGeneration/generateToken.js";
 import { hash } from "bcrypt";
 
 const createUser = (db) => async (req, res) => {
