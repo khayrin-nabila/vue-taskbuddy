@@ -217,18 +217,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-  transform: scale(0.95);
-}
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.3s ease-out;
-}
+  .v-enter-active,
+  .v-leave-active {
+    transition: all 0.3s ease-out;
+  }
 
-input:focus {
-  outline: 2px solid var(--primary);
-}
+  input:focus {
+    outline: 2px solid var(--primary);
+  }
 </style>

@@ -29,6 +29,7 @@ onMounted(() => {
 .slide-right-enter-active {
   transition: all 0.8s ease-in;
 }
+
 .slide-right-enter-from {
   transform: translateX(100px);
   opacity: 0;
@@ -38,6 +39,7 @@ onMounted(() => {
 .slide-left-enter-active {
   transition: all 0.8s ease-in;
 }
+
 .slide-left-enter-from {
   transform: translateX(-100px);
   opacity: 0;
