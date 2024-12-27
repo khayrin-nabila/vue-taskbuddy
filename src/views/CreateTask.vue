@@ -10,8 +10,8 @@
     <div class="flex w-auto items-center gap-4">
     
       <input
-        class="h-12 flex-grow rounded-full border-2 border-primary px-4 focus:shadow-md focus:shadow-primary focus:outline-none"
         v-model="task"
+        class="h-12 flex-grow rounded-full border-2 border-primary px-4 focus:shadow-md focus:shadow-primary focus:outline-none"
         type="text"
         @keyup.enter="createTask"
       />

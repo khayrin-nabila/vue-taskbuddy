@@ -13,9 +13,9 @@
 
     <div
       v-if="showTaskInput"
-      @click="showTaskInput = false"
       class="fixed bottom-6 right-6 flex justify-end"
       data-intro="Click here to close the task input panel."
+      @click="showTaskInput = false"
     >
       <button
         class="rounded-full bg-primary p-2 shadow-lg shadow-primary hover:bg-secondary hover:shadow-secondary"
@@ -26,9 +26,9 @@
 
     <div
       v-if="!showTaskInput"
-      @click="showTaskInput = true"
       class="fixed bottom-6 right-6 flex justify-end"
       data-intro="Click this button to create a new task!"
+      @click="showTaskInput = true"
     >
       <button
         class="rounded-full bg-primary p-2 shadow-lg shadow-primary hover:bg-secondary hover:shadow-secondary"

@@ -25,7 +25,6 @@ export default function tasksRoutes(tasksCollection) {
             const insertedTask = await tasksCollection.findOne({ _id: result.insertedId });
             res.status(201).json(insertedTask);
         } catch (error) {
-            console.error("Error inserting task:", error);
             res.status(500).json({ error: "Failed to add task" });
         }
     });
@@ -45,7 +44,6 @@ export default function tasksRoutes(tasksCollection) {
                 ? res.json(result)
                 : res.status(404).json({ message: 'Task not found' });
         } catch (error) {
-            console.error("Error updating task:", error);
             res.status(500).json({ message: 'Internal Server Error' });
         }
     });
@@ -66,7 +64,6 @@ export default function tasksRoutes(tasksCollection) {
             const result = await tasksCollection.deleteMany({});
             res.json({ message: 'All tasks deleted', deletedCount: result.deletedCount });
         } catch (error) {
-            console.error('Error clearing tasks:', error);
             res.status(500).json({ message: 'Failed to delete tasks' });
         }
     });

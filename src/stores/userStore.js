@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { errorMessages } from "vue/compiler-sfc";
 
 export const useUserStore = defineStore("user", {
 
   state: () => ({
     userName: null,
+    errorMessage: ''
   }),
 
   actions: {
@@ -23,7 +25,7 @@ export const useUserStore = defineStore("user", {
         const response = await axios.post("/api/login", { email, password });
         this.setUserName(response.data.user.name);
       } catch (error) {
-        console.error("Error logging in:", error);
+        this.errorMessage = "Invalid email or password. Please try again.";
       }
     },
 
@@ -32,7 +34,7 @@ export const useUserStore = defineStore("user", {
         const response = await axios.post("/api/signup", { email, name, username, password });
         this.setUserName(response.data.name);
       } catch (error) {
-        console.error("Error signing up:", error);
+        this.errorMessage = "Failed to sign up. Please try again.";
       }
     }
   },

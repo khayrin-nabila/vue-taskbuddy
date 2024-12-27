@@ -9,8 +9,8 @@
         <input
           type="checkbox"
           :checked="task.isCompleted"
-          @input="tasksStore.toggleTaskCompletion(task.id)"
           class="hidden"
+          @input="tasksStore.toggleTaskCompletion(task.id)"
         />
         <div class="flex size-6 items-center justify-center rounded-full border-2 border-primary">
           <CheckCircleIcon
@@ -32,9 +32,9 @@
       >
         <input
           v-if="task.isEditing"
+          v-model="editedTask"
           type="text"
           class="flex-grow border-b-2 border-primary bg-transparent focus:outline-none"
-          v-model="editedTask"
           @keyup.enter="tasksStore.updateTask(task.id, editedTask)"
         />
         <div
@@ -58,16 +58,16 @@
       >
         <CheckIcon
           v-if="task.isEditing"
-          @click="tasksStore.updateTask(task.id, editedTask)"
           class="size-6 cursor-pointer transition-all duration-150 hover:scale-125"
+          @click="tasksStore.updateTask(task.id, editedTask)"
         />
         <XMarkIcon
           v-if="task.isEditing"
+          class="size-6 cursor-pointer hover:text-secondary"
           @click="
             tasksStore.cancelEdit(task.id);
             editedTask = task.task;
           "
-          class="size-6 cursor-pointer hover:text-secondary"
         />
         <PencilIcon
           v-if="
@@ -75,14 +75,14 @@
             !task.isCompleted &&
             isConfirmationPending === false
           "
-          @click="tasksStore.editTask(task.id)"
           class="size-6 cursor-pointer transition-all duration-150 hover:scale-125"
+          @click="tasksStore.editTask(task.id)"
         />
 
         <TrashIcon
           v-if="isConfirmationPending === false"
-          @click="isConfirmationPending = true"
           class="size-6 cursor-pointer transition-all duration-150 hover:scale-125 hover:text-secondary"
+          @click="isConfirmationPending = true"
         />
         <div
           v-if="isConfirmationPending === true"
@@ -90,15 +90,15 @@
         >
           <p class="font-semibold">Delete?</p>
           <TrashIcon
+            class="size-6 cursor-pointer transition-all duration-150 hover:scale-125 hover:text-secondary"
             @click="
               tasksStore.deleteTask(task.id);
               isConfirmationPending = false;
             "
-            class="size-6 cursor-pointer transition-all duration-150 hover:scale-125 hover:text-secondary"
           />
           <ArrowUturnLeftIcon
-            @click="isConfirmationPending = false"
             class="size-6 cursor-pointer transition-all duration-150 hover:scale-90"
+            @click="isConfirmationPending = false"
           />
         </div>
       </div>

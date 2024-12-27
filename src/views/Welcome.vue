@@ -23,19 +23,19 @@
     <div v-if="!isRegistering && !userStore.userName" class="flex flex-col gap-4">
       <div class="relative">
         <input
+          v-model="inputEmail"
           class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
           type="email"
           placeholder="Email"
-          v-model="inputEmail"
           @keyup.enter="login"
         />
       </div>
       <div class="relative">
         <input
+          v-model="inputPassword"
           class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
           type="password"
           placeholder="Password"
-          v-model="inputPassword"
           @keyup.enter="login"
         />
       </div>
@@ -53,34 +53,34 @@
     <div v-if="isRegistering && !userStore.userName" class="flex flex-col gap-4">
       <div class="relative">
         <input
+          v-model="registerEmail"
           class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
           type="email"
           placeholder="Email"
-          v-model="registerEmail"
         />
       </div>
       <div class="relative">
         <input
+          v-model="registerName"
           class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
           type="text"
           placeholder="Name"
-          v-model="registerName"
         />
       </div>
       <div class="relative">
         <input
+          v-model="registerUsername"
           class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
           type="text"
           placeholder="Username"
-          v-model="registerUsername"
         />
       </div>
       <div class="relative">
         <input
+          v-model="registerPassword"
           class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
           type="password"
           placeholder="Password"
-          v-model="registerPassword"
         />
       </div>
       <Transition>
@@ -97,36 +97,36 @@
     <div class="flex flex-col items-center gap-4">
       <button
         v-if="!isRegistering"
-        @click="login"
         class="w-64 rounded-lg bg-primary py-2 text-lg text-white shadow-md transition-all duration-300 hover:bg-secondary active:scale-90"
+        @click="login"
       >
         Login
       </button>
       <button
         v-if="!isRegistering && !userStore.userName"
-        @click="toggleRegister"
         class="w-64 rounded-lg bg-gray-300 py-2 text-lg text-gray-800 shadow-md transition-all duration-300 hover:bg-gray-400 active:scale-90"
+        @click="toggleRegister"
       >
         Register
       </button>
       <button
         v-if="isRegistering"
-        @click="register"
         class="w-64 rounded-lg bg-primary py-2 text-lg text-white shadow-md transition-all duration-300 hover:bg-secondary active:scale-90"
+        @click="register"
       >
         Create Account
       </button>
       <button
         v-if="isRegistering"
-        @click="toggleRegister"
         class="w-64 rounded-lg bg-gray-300 py-2 text-lg text-gray-800 shadow-md transition-all duration-300 hover:bg-gray-400 active:scale-90"
+        @click="toggleRegister"
       >
         Back to Login
       </button>
     </div>
 
     <!-- Sign In As Another Person -->
-    <u v-if="userStore.userName" @click="showConfirmation = true" class="mt-4 text-blue-500 cursor-pointer hover:underline">
+    <u v-if="userStore.userName" class="mt-4 text-blue-500 cursor-pointer hover:underline" @click="showConfirmation = true">
       Sign in as another person
     </u>
 
@@ -138,10 +138,10 @@
             Are you sure you want to sign in as another person?
           </p>
           <div class="flex justify-end gap-4">
-            <button @click="showConfirmation = false" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
+            <button class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400" @click="showConfirmation = false">
               No
             </button>
-            <button @click="confirmLogout" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+            <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" @click="confirmLogout">
               Yes
             </button>
           </div>

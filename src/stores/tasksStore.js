@@ -3,23 +3,18 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 export const useTasksStore = defineStore("tasks", {
-
   state: () => ({
     tasks: [],
+    errorMessage: "", // Add errorMessage state
   }),
 
   actions: {
-
-    // saveTasks() {
-    //   localStorage.setItem("tasks", JSON.stringify(this.tasks));
-    // },
-
     async fetchTasks() {
       try {
         const response = await axios.get("/api/tasks");
         this.tasks = response.data;
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        this.errorMessage = "An error occurred while fetching tasks. Please try again later.";
       }
     },
 
@@ -35,7 +30,7 @@ export const useTasksStore = defineStore("tasks", {
         const response = await axios.post("/api/tasks", task);
         this.tasks.push(response.data);
       } catch (error) {
-        console.error("Error adding task:", error);
+        this.errorMessage = "Failed to add task. Please try again.";
       }
     },
 
@@ -43,12 +38,12 @@ export const useTasksStore = defineStore("tasks", {
       const task = this.tasks.find((task) => task.id === taskId);
       if (task) {
         try {
-        task.isCompleted = !task.isCompleted;
-        axios.put(`/api/tasks/${taskId}`, task); 
-      }catch (error) {
-        console.error("Error updating task:", error);
+          task.isCompleted = !task.isCompleted;
+          axios.put(`/api/tasks/${taskId}`, task); 
+        } catch (error) {
+          this.errorMessage = "Error updating task completion status. Please try again.";
+        }
       }
-    }
     },
 
     editTask(taskId) {
@@ -69,28 +64,18 @@ export const useTasksStore = defineStore("tasks", {
           task.isEditing = false;
           await axios.put(`/api/tasks/${taskId}`, task); // Sync with API
         } catch (error) {
-          console.error("Error updating task:", error);
+          this.errorMessage = "Error updating task. Please try again.";
         }
       }
     },
-    
+
     async deleteTask(taskId) {
       try {
         await axios.delete(`/api/tasks/${taskId}`);
         this.tasks = this.tasks.filter((task) => task.id !== taskId); // Remove from state
       } catch (error) {
-        console.error("Error deleting task:", error);
+        this.errorMessage = "Error deleting task. Please try again.";
       }
     },
-
-  //   async clearTask() {
-  //     try {
-  //         await axios.delete('/api/tasks');
-  //         this.tasks = []; // Clear tasks locally
-  //       } catch (error) {
-  //         console.error("Error clearing tasks:", error);
-  //     }
-  // },
-  
   },
 });

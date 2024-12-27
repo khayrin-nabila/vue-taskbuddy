@@ -50,12 +50,9 @@ const createUser = (db) => async (req, res) => {
       sameSite: "None",
     });
 
-    console.log("Cookie set successfully");
-
     // Respond with the new user data (excluding the password for security)
     res.json({ id: result.insertedId, name: newUser.name, username: newUser.username, email: newUser.email });
   } catch (error) {
-    console.error("Got an error", error);
     res.status(500).send("Internal Server Error");
   }
 };
