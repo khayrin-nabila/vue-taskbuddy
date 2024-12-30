@@ -30,12 +30,11 @@ jobs:
         run: |
           cp -r dist ./backend/frontend
 
-      - name: Install Backend Dependencies and Test
+      - name: Install Backend Dependencies and Test (No tests in this example)
         run: |
           cd ./backend
           npm install
           npm run build --if-present
-          npm run test --if-present
 
       - name: Zip artifact for deployment
         run: |
