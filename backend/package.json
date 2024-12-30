@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit",
-    "dev": "npx nodemon --exec npx babel-node src/start.js"
+    "start": "node src/start.js"
   },
   "type": "module",
   "keywords": [],

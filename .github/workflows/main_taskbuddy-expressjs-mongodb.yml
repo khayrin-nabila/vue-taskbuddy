@@ -21,14 +21,27 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
+      - name: Install Frontend Dependencies and Build
         run: |
+          npm install
+          npm run build --if-present
+
+      - name: Copy Frontend Build to Backend
+        run: |
+          cp -r dist ./backend/frontend
+
+      - name: Install Backend Dependencies and Test
+        run: |
+          cd ./backend
           npm install
           npm run build --if-present
           npm run test --if-present
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd ./backend
+          zip -r release.zip ./*
+          mv release.zip ../
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -52,11 +65,11 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'taskbuddy-expressjs-mongodb'
           slot-name: 'Production'
-          package: .
+          package: ./backend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E0C37B6FF05C4654BE426D12A60E8B26 }}
