@@ -70,5 +70,5 @@ jobs:
         with:
           app-name: 'taskbuddy-expressjs-mongodb'
           slot-name: 'Production'
-          package: ./backend
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E0C37B6FF05C4654BE426D12A60E8B26 }}
