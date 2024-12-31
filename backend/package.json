@@ -1,10 +1,8 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/start.js",
   "scripts": {
-    "test": "mocha --exit",
-    "start": "node src/start.js"
   },
   "type": "module",
   "keywords": [],
