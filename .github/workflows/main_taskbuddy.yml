@@ -18,20 +18,20 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: npm install -backend
+      - name: Install backend dependencies
         run: |
           cd ./backend
           npm install
           npm run build --if-present
 
-      - name: npm install -frontend
+      - name: Install frontend dependencies
         run: |
-          npm install  # Running this at the root where frontend package.json is located
-          npm run build --if-present
-          cp -r ./build ./backend/public  # Ensure this path is correct if needed
+          npm install  # Run at the root, where frontend package.json is located
+          npm run build --if-present  # Builds using Vite
+          cp -r ./dist ./backend/public  # Assuming Vite's build output is in dist/
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip release.zip ./* -r  # Zip everything, including the backend/public
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -64,7 +64,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3435A3EA36FB46EE87832B24A2175879 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_10D63389A16846848A8AD579DCA37401 }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
