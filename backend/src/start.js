@@ -1,13 +1,13 @@
 import { initializeServer } from './server-initialize.js';
 
-const PORT = process.env.PORT || 8000;
+const port = process.env.PORT || 8000;
 
 try {
     initializeServer()
         .then((appInstance) => {
-            appInstance.listen(PORT, () => {
+            appInstance.listen(port, () => {
                 // eslint-disable-next-line no-console
-                console.log(`Server is running on port ${PORT}...`);
+                console.log(`Server is running on port ${port}...`);
             });
         })
 } catch (error) {
