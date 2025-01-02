@@ -48,60 +48,64 @@
 
       <!-- Actions -->
 
-      <div
-        class="flex w-2/12 justify-end gap-2"
-        :class="
-          task.isEditing || isConfirmationPending === true
-            ? 'visible w-5/12'
-            : 'invisible group-hover:visible'
+    <div
+      class="flex w-2/12 justify-end gap-2"
+      :class="
+        task.isEditing || isConfirmationPending === true
+          ? 'visible w-5/12'
+          : 'invisible group-hover:visible'
+      "
+    >
+      <p v-if="task.isEditing" class="font-semibold">
+        <span class="block md:hidden">Edit</span>
+        <span class="hidden md:block">Edit Task</span>
+      </p>
+      <CheckIcon
+        v-if="task.isEditing"
+        class="size-6 cursor-pointer transition-all duration-150 hover:scale-125"
+        @click="tasksStore.updateTask(task.id, editedTask)"
+      />
+      <XMarkIcon
+        v-if="task.isEditing"
+        class="size-6 cursor-pointer hover:text-secondary"
+        @click="
+          tasksStore.cancelEdit(task.id);
+          editedTask = task.task;
         "
-      >
-        <CheckIcon
-          v-if="task.isEditing"
-          class="size-6 cursor-pointer transition-all duration-150 hover:scale-125"
-          @click="tasksStore.updateTask(task.id, editedTask)"
-        />
-        <XMarkIcon
-          v-if="task.isEditing"
-          class="size-6 cursor-pointer hover:text-secondary"
-          @click="
-            tasksStore.cancelEdit(task.id);
-            editedTask = task.task;
-          "
-        />
-        <PencilIcon
-          v-if="
-            !task.isEditing &&
-            !task.isCompleted &&
-            isConfirmationPending === false
-          "
-          class="size-6 cursor-pointer transition-all duration-150 hover:scale-125"
-          @click="tasksStore.editTask(task.id)"
-        />
+      />
+      <PencilIcon
+        v-if="
+          !task.isEditing &&
+          !task.isCompleted &&
+          isConfirmationPending === false
+        "
+        class="size-6 cursor-pointer transition-all duration-150 hover:scale-125"
+        @click="tasksStore.editTask(task.id)"
+      />
 
+      <TrashIcon
+        v-if="!task.isEditing && isConfirmationPending === false"
+        class="size-6 cursor-pointer transition-all duration-150 hover:scale-125 hover:text-secondary"
+        @click="isConfirmationPending = true"
+      />
+      <div
+        v-if="isConfirmationPending === true"
+        class="flex items-center gap-2 rounded-lg p-1"
+      >
+        <p class="font-semibold">Delete?</p>
         <TrashIcon
-          v-if="isConfirmationPending === false"
           class="size-6 cursor-pointer transition-all duration-150 hover:scale-125 hover:text-secondary"
-          @click="isConfirmationPending = true"
+          @click="
+            tasksStore.deleteTask(task.id);
+            isConfirmationPending = false;
+          "
         />
-        <div
-          v-if="isConfirmationPending === true"
-          class="flex items-center gap-2 rounded-lg p-1"
-        >
-          <p class="font-semibold">Delete?</p>
-          <TrashIcon
-            class="size-6 cursor-pointer transition-all duration-150 hover:scale-125 hover:text-secondary"
-            @click="
-              tasksStore.deleteTask(task.id);
-              isConfirmationPending = false;
-            "
-          />
-          <ArrowUturnLeftIcon
-            class="size-6 cursor-pointer transition-all duration-150 hover:scale-90"
-            @click="isConfirmationPending = false"
-          />
-        </div>
+        <ArrowUturnLeftIcon
+          class="size-6 cursor-pointer transition-all duration-150 hover:scale-90"
+          @click="isConfirmationPending = false"
+        />
       </div>
+    </div>
     </div>
 </Transition>
 </template>
@@ -130,12 +134,4 @@ const props = defineProps({
 
 const editedTask = ref(props.task.task);
 
-// watch(
-//   tasksStore.tasks,
-//   () => {
-//     // tasksStore.saveTasks();
-//     tasksStore.fetchTasks();
-//   },
-//   { deep: true },
-// );
 </script>

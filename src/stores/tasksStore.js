@@ -5,7 +5,7 @@ import axios from "axios";
 export const useTasksStore = defineStore("tasks", {
   state: () => ({
     tasks: [],
-    errorMessage: "", // Add errorMessage state
+    errorMessage: "",
   }),
 
   actions: {
@@ -14,7 +14,11 @@ export const useTasksStore = defineStore("tasks", {
         const response = await axios.get("/api/tasks");
         this.tasks = response.data;
       } catch (error) {
-        this.errorMessage = "An error occurred while fetching tasks. Please try again later.";
+        if (error.response && error.response.status === 401) {
+          this.errorMessage = "Session expired. Please log in again.";
+          this.tasks = [];
+          this.errorMessage = "Failed to fetch tasks.";
+        }
       }
     },
 
@@ -77,5 +81,9 @@ export const useTasksStore = defineStore("tasks", {
         this.errorMessage = "Error deleting task. Please try again.";
       }
     },
+
+    clearTasks() {
+      this.tasks = [];
+    }
   },
 });
