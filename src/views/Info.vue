@@ -30,9 +30,9 @@
         saves your progress so you can pick up right where you left off.
       </p>
 
-      <blockquote>
+      <h4>
         Give TaskBuddy a try and see how it improves your productivity!
-      </blockquote>
+      </h4>
 
     </div>
   </div>
