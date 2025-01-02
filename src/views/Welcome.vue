@@ -94,7 +94,7 @@
       </div>
       <Transition>
         <p v-if="isRegisterInputInvalid" class="text-red-500 text-sm font-medium">
-          {{ userStore.errorMessage }}
+          Please fill out all fields.
         </p>
       </Transition>
     </div>
