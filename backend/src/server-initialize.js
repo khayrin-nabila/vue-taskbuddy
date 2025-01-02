@@ -11,7 +11,6 @@ export async function initializeServer() {
 
     const router = Router();
 
-    // Define Routes
     router.post('/api/signup', createUser(db));
     router.post('/api/login', login(db));
     router.get('/api/logout', (req, res) => {
