@@ -5,7 +5,7 @@
     <h1 class="bg-gradient-to-br from-primary to-secondary bg-clip-text text-4xl font-bold text-transparent md:text-6xl">
       TaskBuddy
     </h1>
-    <p class="text-xl text-gray-600 md:text-2xl">
+    <p class="text-xl text-gray-600 md:text-2xl text-center">
       Your personal task management assistant
     </p>
 
@@ -29,6 +29,11 @@
           placeholder="Email"
           @keyup.enter="login"
         />
+        <Transition>
+          <p v-if="isEmailInvalid" class="text-red-500 text-sm font-medium">
+            Please enter a valid email address.
+          </p>
+        </Transition>
       </div>
       <div class="relative">
         <input
@@ -38,12 +43,14 @@
           placeholder="Password"
           @keyup.enter="login"
         />
+        <Transition>
+          <p v-if="isPasswordInvalid" class="text-red-500 text-sm font-medium">
+            {{ userStore.errorMessage }}
+          </p>
+        </Transition>
       </div>
       <Transition>
-        <p
-          v-if="isInputInvalid"
-          class="text-red-500 text-sm font-medium"
-        >
+        <p v-if="isInputInvalid" class="text-red-500 text-sm font-medium">
           Please fill out both fields.
         </p>
       </Transition>
@@ -58,6 +65,11 @@
           type="email"
           placeholder="Email"
         />
+        <Transition>
+          <p v-if="isRegisterEmailInvalid" class="text-red-500 text-sm font-medium">
+            {{ emailErrorMessage }}
+          </p>
+        </Transition>
       </div>
       <div class="relative">
         <input
@@ -69,26 +81,20 @@
       </div>
       <div class="relative">
         <input
-          v-model="registerUsername"
-          class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
-          type="text"
-          placeholder="Username"
-        />
-      </div>
-      <div class="relative">
-        <input
           v-model="registerPassword"
           class="h-12 w-80 rounded-lg border border-gray-300 p-3 text-lg focus:border-primary focus:outline-none"
           type="password"
           placeholder="Password"
         />
+        <Transition>
+          <p v-if="isRegisterPasswordInvalid" class="text-red-500 text-sm font-medium">
+            Password must be at least 6 characters long.
+          </p>
+        </Transition>
       </div>
       <Transition>
-        <p
-          v-if="isRegisterInputInvalid"
-          class="text-red-500 text-sm font-medium"
-        >
-          Please fill out all fields.
+        <p v-if="isRegisterInputInvalid" class="text-red-500 text-sm font-medium">
+          {{ userStore.errorMessage }}
         </p>
       </Transition>
     </div>
@@ -161,12 +167,16 @@ import { useTasksStore } from "@/stores/tasksStore";
 const inputEmail = ref("");
 const inputPassword = ref("");
 const isInputInvalid = ref(false);
+const isEmailInvalid = ref(false);
+const isPasswordInvalid = ref(false);
 
 const registerEmail = ref("");
 const registerName = ref("");
-const registerUsername = ref("");
 const registerPassword = ref("");
+const emailErrorMessage = ref('');
 const isRegisterInputInvalid = ref(false);
+const isRegisterEmailInvalid = ref(false);
+const isRegisterPasswordInvalid = ref(false);
 
 const isRegistering = ref(false);
 const showConfirmation = ref(false);
@@ -175,30 +185,83 @@ const router = useRouter();
 const userStore = useUserStore();
 const tasksStore = useTasksStore();
 
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 const login = async () => {
   if (userStore.userName) {
     router.push("/tasks");
   } else {
-    if (!inputEmail.value || !inputPassword.value) {
+  if (!inputEmail.value || !inputPassword.value) {
     isInputInvalid.value = true;
     setTimeout(() => (isInputInvalid.value = false), 5000);
     return;
   }
-  await userStore.login(inputEmail.value, inputPassword.value);
-  router.push("/tasks");
+
+  if (!isValidEmail(inputEmail.value)) {
+    isEmailInvalid.value = true;
+    setTimeout(() => (isEmailInvalid.value = false), 5000);
+    return;
   }
+
+  try {
+    await userStore.login(inputEmail.value, inputPassword.value);
+    router.push("/tasks");
+  } catch (error) {
+    isPasswordInvalid.value = true;
+    setTimeout(() => (isPasswordInvalid.value = false), 5000);
+    return; // Prevent further processing on error
+  }}
 };
 
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 const register = async () => {
-  if (!registerEmail.value || !registerName.value || !registerUsername.value || !registerPassword.value) {
+  if (!registerEmail.value || !registerName.value || !registerPassword.value) {
     isRegisterInputInvalid.value = true;
     setTimeout(() => (isRegisterInputInvalid.value = false), 5000);
     return;
   }
-  await userStore.signup(registerEmail.value, registerName.value, registerUsername.value, registerPassword.value);
-  userStore.setUserName(registerName.value);
-  isRegistering.value = false;
-  router.push("/tasks");
+
+  if (!isValidEmail(registerEmail.value)) {
+    emailErrorMessage.value = "Please enter a valid email address.";
+    isRegisterEmailInvalid.value = true;
+    setTimeout(() => (isRegisterEmailInvalid.value = false), 5000);
+    return;
+  }
+
+  if (registerPassword.value.length < 6) {
+    isRegisterPasswordInvalid.value = true;
+    setTimeout(() => (isRegisterPasswordInvalid.value = false), 5000);
+    return;
+  }
+
+  try {
+    const capitalizedRegisterName = capitalizeFirstLetter(registerName.value);
+    await userStore.signup(registerEmail.value, capitalizedRegisterName, registerPassword.value);
+
+    if (userStore.errorMessage) {
+      if (userStore.errorMessage === "Email already exists.") {
+        emailErrorMessage.value = "Email already exists.";
+        isRegisterEmailInvalid.value = true;
+        setTimeout(() => (isRegisterEmailInvalid.value = false), 5000);
+        return;
+      }
+    }
+
+    userStore.setUserName(capitalizedRegisterName);
+    isRegistering.value = false;
+    router.push("/tasks");
+  } catch (error) {
+    emailErrorMessage.value = "Unable to connect to the server. Please try again.";
+    isRegisterEmailInvalid.value = true;
+    setTimeout(() => (isRegisterEmailInvalid.value = false), 5000);
+    return;
+  }
 };
 
 const toggleRegister = () => {
@@ -206,8 +269,8 @@ const toggleRegister = () => {
 };
 
 const confirmLogout = async () => {
-  userStore.setUserName("");
-  // await tasksStore.clearTask();
+  userStore.logout();
+  tasksStore.clearTasks();
   showConfirmation.value = false;
 };
 

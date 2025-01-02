@@ -4,56 +4,38 @@ import { hash } from "bcrypt";
 const createUser = (db) => async (req, res) => {
   try {
     const usersCollection = db.collection("users");
+    const { email, password, name } = req.body;
 
-    // Check for required fields
-    if (
-      !(
-        req.body.email &&
-        req.body.password &&
-        req.body.name &&
-        req.body.username
-      )
-    ) {
-      return res.status(400).send("All input is required");
+    if (!(email && password && name)) {
+      return res.status(400).json({ message: "All input is required" });
     }
 
-    // Check if user already exists
-    const oldUser = await usersCollection.findOne({ email: req.body.email });
-    if (oldUser) {
-      return res.status(409).send("User Already Exist. Please Login");
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
     }
 
-    // Hash the password
-    const salt = 10;
-    const hashedPassword = await hash(req.body.password, salt);
+    const emailExists = await usersCollection.findOne({ email });
+    if (emailExists) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
 
-    // Create a new user object
-    const newUser = {
-      name: req.body.name,
-      username: req.body.username,
-      email: req.body.email,
-      password: hashedPassword,
-    };
+    const hashedPassword = await hash(password, 10);
 
-    // Insert the new user into the database
+    const newUser = { name, email, password: hashedPassword, tourSeen: false};
     const result = await usersCollection.insertOne(newUser);
 
-    // Generate JWT token
     const token = createSecretToken(result.insertedId);
-
-    // Set the cookie with the token
     res.cookie("token", token, {
       path: "/",
-      expires: new Date(Date.now() + 86400000), // 1 day expiry
-      secure: true, // HTTPS only
-      httpOnly: true, // Prevent client-side access
+      expires: new Date(Date.now() + 86400000),
+      secure: true,
+      httpOnly: true,
       sameSite: "None",
     });
 
-    // Respond with the new user data (excluding the password for security)
-    res.json({ id: result.insertedId, name: newUser.name, username: newUser.username, email: newUser.email });
+    res.json({ id: result.insertedId, name, email });
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
